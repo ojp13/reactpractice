@@ -19,10 +19,10 @@ class SinglePost extends Component {
         if (res.status !== 200) {
           throw new Error('Failed to fetch status');
         }
-        console.log(res);
         return res.json();
       })
       .then(resData => {
+        console.log(resData);
         this.setState({
           title: resData.post.title,
           author: resData.post.creator.name,
