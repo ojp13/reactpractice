@@ -210,26 +210,18 @@ class Feed extends Component {
         if (resData.errors && resData.errors[0].code !== 201) {
           throw new Error('Creating or editing a post failed!');
         }
-        let post;
+        let resDataField = 'createPost';
         if (this.state.editPost) {
-          post = {
-            _id: resData.data.updatePost._id,
-            title: resData.data.updatePost.title,
-            content: resData.data.updatePost.content,
-            creator: resData.data.updatePost.creator,
-            createdAt: resData.data.updatePost.createdAt,
-            imagePath: resData.data.updatePost.imageUrl
-          };
-        } else {
-          post = {
-            _id: resData.data.createPost._id,
-            title: resData.data.createPost.title,
-            content: resData.data.createPost.content,
-            creator: resData.data.createPost.creator,
-            createdAt: resData.data.createPost.createdAt,
-            imagePath: resData.data.createPost.imageUrl
-          };
+          resDataField = 'updatePost'
         }
+        const post = {
+          _id: resData.data[resDataField]._id,
+          title: resData.data[resDataField].title,
+          content: resData.data[resDataField].content,
+          creator: resData.data[resDataField].creator,
+          createdAt: resData.data[resDataField].createdAt,
+          imagePath: resData.data[resDataField].imageUrl
+        };
         this.setState(prevState => {
           let updatedPosts = [...prevState.posts];
           if (prevState.editPost) {
