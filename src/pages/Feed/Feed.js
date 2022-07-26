@@ -60,8 +60,6 @@ class Feed extends Component {
               name
             }
             title
-            imageUrl
-            content
           }
           totalPosts
         }
@@ -80,7 +78,6 @@ class Feed extends Component {
         return res.json();
       })
       .then(resData => {
-        console.log(resData.data.posts.posts);
         this.setState({
           posts: resData.data.posts.posts.map(post => {
             return {
@@ -169,7 +166,6 @@ class Feed extends Component {
         if (resData.errors && resData.errors[0].code !== 201) {
           throw new Error('Creating or editing a post failed!');
         }
-        console.log(resData);
         const post = {
           _id: resData.data.createPost._id,
           title: resData.data.createPost.title,
@@ -178,7 +174,17 @@ class Feed extends Component {
           createdAt: resData.data.createPost.createdAt
         };
         this.setState(prevState => {
+          let updatedPosts = [...prevState.posts];
+          if (prevState.editPost) {
+            const postIndex = prevState.posts.findIndex(
+              p => p._id === prevState.editPost._id
+            );
+            updatedPosts[postIndex] = post;
+          } else {
+            updatedPosts.unshift(post);
+          }
           return {
+            posts: updatedPosts,
             isEditing: false,
             editPost: null,
             editLoading: false
