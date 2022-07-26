@@ -53,7 +53,7 @@ class Feed extends Component {
     const graphqlQuery = {
       query: `
       query {
-        posts {
+        posts(pageNumber: ${page}) {
           posts {
             _id
             creator {
@@ -61,7 +61,7 @@ class Feed extends Component {
             }
             title
           }
-          totalPosts
+          totalItems
         }
       }
       `
@@ -78,6 +78,7 @@ class Feed extends Component {
         return res.json();
       })
       .then(resData => {
+        console.log(resData);
         this.setState({
           posts: resData.data.posts.posts.map(post => {
             return {
@@ -85,7 +86,7 @@ class Feed extends Component {
               imagePath: post.imageUrl
             };
           }),
-          totalPosts: resData.totalItems,
+          totalPosts: resData.data.posts.totalItems,
           postsLoading: false
         });
       })
