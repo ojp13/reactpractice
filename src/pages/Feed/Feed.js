@@ -33,9 +33,11 @@ class Feed extends Component {
         this.setState({ status: resData.status });
       })
       .catch(this.catchError);
+    this.loadPosts();
   }
 
   loadPosts = direction => {
+    console.log('Loading Posts');
     if (direction) {
       this.setState({ postsLoading: true, posts: [] });
     }
@@ -48,20 +50,39 @@ class Feed extends Component {
       page--;
       this.setState({ postPage: page });
     }
-    fetch('http://localhost:8080/feed/posts?page=' + page, {
-      headers: {
-        Authorization: 'Bearer ' + this.props.token
+    const graphqlQuery = {
+      query: `
+      query {
+        posts {
+          posts {
+            _id
+            creator {
+              name
+            }
+            title
+            imageUrl
+            content
+          }
+          totalPosts
+        }
       }
+      `
+    }
+    fetch('http://localhost:8080/graphql', {
+      headers: {
+        Authorization: 'Bearer ' + this.props.token,
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify(graphqlQuery)
     })
       .then(res => {
-        if (res.status !== 200) {
-          throw new Error('Failed to fetch posts.');
-        }
         return res.json();
       })
       .then(resData => {
+        console.log(resData.data.posts.posts);
         this.setState({
-          posts: resData.posts.map(post => {
+          posts: resData.data.posts.posts.map(post => {
             return {
               ...post,
               imagePath: post.imageUrl
