@@ -67,8 +67,8 @@ class Feed extends Component {
     }
     const graphqlQuery = {
       query: `
-      query {
-        posts(pageNumber: ${page}) {
+      query FetchPosts($page: Int!) {
+        posts(pageNumber: $page) {
           posts {
             _id
             creator {
@@ -82,7 +82,10 @@ class Feed extends Component {
           totalItems
         }
       }
-      `
+      `,
+      variables: {
+        page: page
+      }
     }
     fetch('http://localhost:8080/graphql', {
       headers: {
