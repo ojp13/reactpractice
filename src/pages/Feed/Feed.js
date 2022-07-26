@@ -276,7 +276,8 @@ class Feed extends Component {
             posts: updatedPosts,
             isEditing: false,
             editPost: null,
-            editLoading: false
+            editLoading: false,
+            totalPosts: this.state.totalPosts + 1
           };
         });
       })
