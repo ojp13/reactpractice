@@ -37,7 +37,6 @@ class Feed extends Component {
   }
 
   loadPosts = direction => {
-    console.log('Loading Posts');
     if (direction) {
       this.setState({ postsLoading: true, posts: [] });
     }
@@ -78,7 +77,6 @@ class Feed extends Component {
         return res.json();
       })
       .then(resData => {
-        console.log(resData);
         this.setState({
           posts: resData.data.posts.posts.map(post => {
             return {
@@ -182,6 +180,7 @@ class Feed extends Component {
             );
             updatedPosts[postIndex] = post;
           } else {
+            updatedPosts.pop();
             updatedPosts.unshift(post);
           }
           return {
